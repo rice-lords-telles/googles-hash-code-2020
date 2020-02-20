@@ -1,3 +1,9 @@
+from tqdm import tqdm
+import pprint
+
+pp = pprint.PrettyPrinter(indent=4)
+
+
 # Possible Data Structure
 # {
 #     total_books: 6,
@@ -38,19 +44,92 @@
 
 facility = {}
 
+
 # Get File info
 def get_input(file_name):
     total_books = None
     total_libraries = None
     total_days = None
     book_scores = []
-    library_id = []
-    with open(file_name) as descriptor:
+    libraries = []
+    with open(file_name) as data:
         print("reading file")
-        line = descriptor.readline().split(" ")
-        capacity = int(line[0])
-        pizza_types = descriptor.readline().split(" ")
+        line = data.readline().split(" ")
+        print(line)
+        total_books = int(line[0])
+        total_libraries = int(line[1])
+        total_days = int(line[2])
+        books_scores = data.readline().split(" ")
+        libraries = [{}] * total_libraries
+        print(books_scores)
         print("got types")
-        pizza_types = [int(item) for item in pizza_types]
+        line = next(data).split(" ")
+        libraries[0]['signup'] = int(line[1])
+        libraries[0]['bdp'] = int(line[2])
+        libraries[0]['books'] = data.readline().split(" ")
         print("converted types")
     return capacity, pizza_types
+
+
+def get_input(file_path):
+    """
+    :returns:
+    {
+        total_books: 0,
+        total_libraries: 0,
+        total_days: 0,
+        books: [7, 3, 6, 9]
+        libraries:[
+            {
+                books: [2],
+                signup: 0,
+                shipping: 0
+            },
+        ]
+    }
+    """
+    output = dict(
+        total_books=-0, total_libraries=0, total_days=0, books=[], libraries=[]
+    )
+    line_num = (
+        0  # used to track whether we are in the top 2 rows or in the library section
+    )
+    library_line_one = (
+        True  # used to track whether we are on line 1 or line2 of each library
+    )
+
+    with open(file_path) as data:
+        num_lines = sum(1 for line in open(file_path))
+
+        for num in tqdm(range(num_lines)):
+            line = data.readline().strip()
+            if not line:
+                break
+            line = line.strip().split(" ")
+            if line_num == 0:
+                # First line of file = [num of diff books][num of libraries][days for scanning]
+                output["total_books"] = int(line[0])
+                output["total_libraries"] = int(line[1])
+                output["total_days"] = int(line[2])
+            elif line_num == 1:
+                # Second line of file = [score of each book]
+                output["books"] = [int(i) for i in line]
+            else:
+                # iterating through libraries
+                if library_line_one:
+                    # line: book_total, signup, shipping
+                    library = dict(total_books=int(line[0]), books=[], signup=int(line[1]), shipping=int(line[2]))
+                    output["libraries"].append(library)
+                else:
+                    # line: [book_value_1, book_value_2]
+                    current_library = len(output["libraries"]) - 1
+                    output["libraries"][current_library]["books"] = [
+                        int(i) for i in line
+                    ]
+
+                library_line_one = not library_line_one
+
+            line_num += 1
+    return output
+
+pp.pprint(get_input("a_example.txt"))
