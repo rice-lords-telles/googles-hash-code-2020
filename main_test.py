@@ -1,6 +1,8 @@
+from tqdm import tqdm
 import pytest
 import sys
-from main import get_input, TEST_INPUTS
+import pprint
+from utils import get_input, TEST_INPUTS
 
 
 class TestInputParser(object):
@@ -8,22 +10,29 @@ class TestInputParser(object):
         get_input(TEST_INPUTS[0])
 
     def test_output_data_structure(self):
-        output = get_input(TEST_INPUTS[0])
-        assert output["total_books"] is not None
-        assert output["total_libraries"] is not None
-        assert output["total_days"] is not None
-        assert output["books"] is not None
-        assert output["libraries"] is not None
+        for file_path in tqdm(TEST_INPUTS):
+            output = get_input(file_path)
+            # pprint.pprint(output)
+            assert output["total_books"] is not None
+            assert output["total_libraries"] is not None
+            assert output["total_days"] is not None
+            assert output["books"] is not None
+            assert output["libraries"] is not None
 
-        assert isinstance(output["total_books"], int)
-        assert isinstance(output["total_libraries"], int)
-        assert isinstance(output["total_days"], int)
-        assert isinstance(output["total_libraries"], int)
-        assert isinstance(output["books"], list)
-        assert isinstance(output["books"][0], int)
+            assert isinstance(output["total_books"], int)
+            assert isinstance(output["total_libraries"], int)
+            assert isinstance(output["total_days"], int)
+            assert isinstance(output["total_libraries"], int)
+            assert isinstance(output["books"], list)
+            assert isinstance(output["books"][0], int)
 
-        assert isinstance(output["libraries"], list)
-        assert isinstance(output["libraries"][0], dict)
+            assert isinstance(output["libraries"], list)
+            assert isinstance(output["libraries"][0], dict)
+            assert len(output["libraries"]) == output["total_libraries"]
+            assert len(output["books"]) == output["total_books"]
+            for library in output["libraries"]:
+                assert len(library["books"]) == library["total_books"]
+                assert isinstance(library["books"][0], int)
 
 
 class TestAndScoreAlgorithms(object):
