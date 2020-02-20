@@ -41,6 +41,7 @@
 #         }
 #     ]
 # }
+
 TEST_INPUTS = [
     "a_example.txt",
     "b_read_on.txt",
@@ -57,7 +58,7 @@ def algorithm_template(file_path):
     return []
 
 
-def get_input():
+def get_input(file_path=TEST_INPUTS[0]):
     """
     :returns:
     {
@@ -65,7 +66,7 @@ def get_input():
         total_libraries: 0,
         total_days: 0,
         books: [7, 3, 6, 9]
-        library_id:[
+        libraries:[
             {
                 books: [2],
                 signup: 0,
@@ -74,32 +75,47 @@ def get_input():
         ]
     }
     """
+    output = dict(
+        total_books=-1, total_libraries=-1, total_days=-1, books=[], libraries=[]
+    )
     line_num = (
-        1  # used to track whether we are in the top 2 rows or in the library section
+        0  # used to track whether we are in the top 2 rows or in the library section
     )
     library_line_one = (
         True  # used to track whether we are on line 1 or line2 of each library
     )
-    library_id = 0  # used to track library ID for assignment
+    # library_id = 0  # used to track library ID for assignment
 
-    with open("a_example.txt") as data:
-        line = data.readline()
-        if line_num == 1:
-            # First line of file = [num of diff books][num of libraries][days for scanning]
-            total_books = line.split(" ", 0)
-            total_libraries = line.split(" ", 1)
-            total_days = line.split(" ", 2)
-        elif line_num == 2:
-            # Second line of file = [score of each book]
-            books = [int(i) for i in line.split()]
-        else:
-            # iterating through libraries
-            if library_line_one:
-                # first line of library
-                library_id = {"books": []}
-                library_line_one != library_line_one
+    with open(file_path) as data:
+        while 1:
+            line = data.readline()
+            if not line:
+                break
+            line = line.split(" ")
+            print(line)
+            if line_num == 0:
+                # First line of file = [num of diff books][num of libraries][days for scanning]
+                output["total_books"] = int(line[0])
+                output["total_libraries"] = int(line[1])
+                output["total_days"] = int(line[2])
+            elif line_num == 1:
+                print(line)
+                # Second line of file = [score of each book]
+                output["books"] = [int(i) for i in line]
             else:
-                # second line of library
+                # iterating through libraries
+                if library_line_one:
+                    # line: book_total, signup, shipping
+                    library = dict(books=[], signup=int(line[1]), shipping=int(line[2]))
+                    output["libraries"].append(library)
+                else:
+                    # line: [book_value_1, book_value_2]
+                    current_library = len(output["libraries"]) - 1
+                    output["libraries"][current_library]["books"] = [
+                        int(i) for i in line
+                    ]
+
                 library_line_one != library_line_one
 
-        line_num += 1
+            line_num += 1
+    return output
