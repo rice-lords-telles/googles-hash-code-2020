@@ -118,7 +118,12 @@ def get_input(file_path):
     lib_0_days = lib_0['signup'] + (lib_0['total_books'] - lib_0['shipping'])
     lib_1_days = lib_1['signup'] + (lib_1['total_books'] - lib_1['shipping'])
 
-    # return output
-    return (lib_0_days + lib_1_days - total_days) / total_libraries
+    books_to_remove = (lib_0_days + lib_1_days - total_days) // total_libraries
 
-print(get_input("a_example.txt"))
+    for i in range(books_to_remove-1):
+        del min(sorted(output['libraries'][i]))
+
+    # return output
+    return lib_0, lib_1
+
+print(f'Num books to remove: {get_input("a_example.txt")}')
