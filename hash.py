@@ -1,3 +1,24 @@
+# Possible Data Structure
+# {
+#     total_books: 6,
+#     total_libraries: 2,
+#     total_days: 7,
+#     book_scores: [1, 2, 3, 6, 5, 4],
+#     library_id: [
+#         {
+#             books: [0, 1, 2, 3, 4],
+#             signup: 2,
+#             # books per day
+#             bpd: 2
+#         },
+#         {
+#             books: [0, 2, 3, 5],
+#             signup: 3,
+#             bpd: 1
+#         }
+#     ]
+# }
+
 # INPUT
 
 # 6 2 7 - 6 books, 2 libraries, 7 days of scanning
@@ -15,10 +36,15 @@
 # 0 5 - Second library to sign up is Lib0, after signup, send 5 books
 # 0 1 2 3 4 - Lib0 will send book 0, 1, 2, 3, 4 in order
 
+facility = {}
+
 # Get File info
 def get_input(file_name):
-    capacity = None
-    pizza_type = None
+    total_books = None
+    total_libraries = None
+    total_days = None
+    book_scores = []
+    library_id = []
     with open(file_name) as descriptor:
         print("reading file")
         line = descriptor.readline().split(" ")
