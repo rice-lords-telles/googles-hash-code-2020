@@ -109,7 +109,16 @@ def get_input(file_path):
                 library_line_one = not library_line_one
 
             line_num += 1
-    return output
 
+    lib_0 = output['libraries'][0]
+    lib_1 = output['libraries'][1]
+    total_days = output['total_days']
+    total_libraries = output['total_libraries']
 
-pp.pprint(get_input("a_example.txt"))
+    lib_0_days = lib_0['signup'] + (lib_0['total_books'] - lib_0['shipping'])
+    lib_1_days = lib_1['signup'] + (lib_1['total_books'] - lib_1['shipping'])
+
+    # return output
+    return (lib_0_days + lib_1_days - total_days) / total_libraries
+
+print(get_input("a_example.txt"))
