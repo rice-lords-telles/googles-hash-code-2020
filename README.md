@@ -28,3 +28,9 @@ pip install --requirement requirements.txt
 ```bash
 black .
 ```
+
+### Lint the code
+
+```
+flake8 .
+```
