@@ -3,6 +3,7 @@ import pytest
 import sys
 import pprint
 from utils import get_input, TEST_INPUTS
+from brute_force import as_they_come_algorithm
 
 
 class TestInputParser(object):
@@ -39,7 +40,7 @@ class TestAndScoreAlgorithms(object):
     def setup_class(self):
 
         # {function: Function,  score: Number, output: return from Function}
-        self.algorithms = []
+        self.algorithms = [dict(function=as_they_come_algorithm)]
         self.file_path = TEST_INPUTS[0]
         self.input = get_input(self.file_path)
         print("Algorithm\tScore")
@@ -51,14 +52,21 @@ class TestAndScoreAlgorithms(object):
     def test_valid_output(self):
         for algorithm in self.algorithms:
             output = algorithm["output"]
-            assert output.length % 2 != 0
+            assert len(output) % 2 != 0
 
     def test_score_(self):
         pass
 
 
 def get_score(output):
-    return -1
+    score = 0
+    for index, line in enumerate(output):
+        if index < 2:
+            continue
+        if index % 2 == 0:
+            score += sum(line)
+
+    return score
 
 
 if __name__ == "__main__":

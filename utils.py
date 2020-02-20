@@ -21,6 +21,7 @@ def get_input(file_path=TEST_INPUTS[0]):
         books: [7, 3, 6, 9]
         libraries:[
             {
+                total_books: 0,
                 books: [2],
                 signup: 0,
                 shipping: 0
@@ -82,5 +83,6 @@ def write_output_to_files(output, input_file_name):
     output_path = "{}.out.txt".format(input_file_name)
     with open(output_path, "w") as descriptor:
         for items in output:
-            descriptor.write()
-            output.write(" ".join(str(x) for x in items))
+            if not items:
+                break
+            descriptor.write(" ".join(str(x) for x in items))
