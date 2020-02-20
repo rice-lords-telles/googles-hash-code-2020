@@ -14,7 +14,7 @@ brew install python
 sudo /usr/bin/easy_install virtualenv
 ````
 
-### Setup the project
+#### Setup the project
 ```bash
 virtualenv venv
 source venv/bin/activate
